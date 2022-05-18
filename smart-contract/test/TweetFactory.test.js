@@ -87,4 +87,16 @@ describe("TweetFactory", () => {
             tweetFactory.connect(user1).updateTweet(1, "Hello Everyone"),
         ).to.be.reverted;
     });
+
+    // Delete a tweet with a given _tweetId
+    it("should delete a tweet", async () => {
+        await tweetFactory.connect(user1).createTweet("Hello Everyone");
+        await tweetFactory.connect(user1).deleteTweet(0);
+
+        const tweets = await tweetFactory.getTweets();
+        const lasttweet = tweets[0];
+
+        expect(tweets.length).to.equal(1);
+        expect(lasttweet.tweet).to.equal("");
+    });
 });
