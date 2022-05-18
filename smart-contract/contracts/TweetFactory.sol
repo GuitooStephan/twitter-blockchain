@@ -26,6 +26,9 @@ contract TweetFactory {
         address owner,
         uint32 publishedTime
     );
+    event DeleteTweet(
+        uint32 tweetId
+    );
 
     // Main Variable
     Tweet[] public tweets;
@@ -55,6 +58,18 @@ contract TweetFactory {
         tweets[_tweetId].tweet = _tweet;
 
         emit UpdatedTweet(uint32(_tweetId), _tweet, msg.sender, uint32(tweets[_tweetId].publishedTime));
+    }
+
+    function deleteTweet(uint256 _tweetId) external {
+        require(
+            msg.sender == tweetToOwner[uint32(_tweetId)],
+            "You need to be the tweet owner"
+        );
+
+        tweets[_tweetId] = Tweet(uint32(0), "", address(0), uint32(0));
+        tweetToOwner[uint32(_tweetId)] = address(0);
+        
+        emit DeleteTweet(uint32(_tweetId));
     }
 
     /**
