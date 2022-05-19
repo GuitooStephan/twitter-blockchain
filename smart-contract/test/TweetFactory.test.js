@@ -23,7 +23,7 @@ describe("TweetFactory", () => {
         expect(tweets.length).to.equal(1);
     });
 
-    //Create tweet should emit event
+    // Create tweet should emit event
     it("create a tweet should emit event", async () => {
         await expect(
             tweetFactory.connect(user1).createTweet("Hello Everyone"),
@@ -72,7 +72,7 @@ describe("TweetFactory", () => {
             .should.be.reverted;
     });
 
-    //Update tweet should emit event
+    // Update tweet should emit event
     it("update a tweet should emit event", async () => {
         await tweetFactory.connect(user1).createTweet("Hello Everyone");
         await expect(
@@ -80,7 +80,7 @@ describe("TweetFactory", () => {
         ).to.emit(tweetFactory, "UpdatedTweet");
     });
 
-    //Update tweet with wrong tweet id should fail
+    // Update tweet with wrong tweet id should fail
     it("update a tweet with wrong tweet id should fail", async () => {
         await tweetFactory.connect(user1).createTweet("Hello Everyone");
         await expect(
@@ -98,5 +98,21 @@ describe("TweetFactory", () => {
 
         expect(tweets.length).to.equal(1);
         expect(lasttweet.tweet).to.equal("");
+    });
+
+    // Delete a tweet with a given _tweetId among others
+    it("should delete a tweet among others", async () => {
+        await tweetFactory.connect(user1).createTweet("Hello Everyone");
+        await tweetFactory.connect(user2).createTweet("How are you");
+        await expect(tweetFactory.connect(user1).deleteTweet(1)).to.be.reverted;
+
+        const tweets = await tweetFactory.getTweets();
+        expect(tweets.length).to.equal(2);
+    });
+
+    // Should not be able to delete another user tweet
+    it("should not delete another user's tweet", async () => {
+        await tweetFactory.connect(user1).createTweet("Hello Everyone");
+        await expect(tweetFactory.connect(user2).deleteTweet(0)).to.be.reverted;
     });
 });
