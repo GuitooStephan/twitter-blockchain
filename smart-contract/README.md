@@ -1,15 +1,43 @@
-# Basic Sample Hardhat Project
+# Tweet Clone - Smart Contracts
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
+This is a web3 twitter clone
 
-Try running some of the following tasks:
+## Installation and running
 
-```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-node scripts/sample-script.js
-npx hardhat help
+```bash
+docker build . -t hhdocker && docker run -it --name myhd hhdocker
 ```
+
+## Running (only)
+
+```bash
+docker run -it --name myhd hhdocker
+```
+
+## Deploy the smart contract locally
+
+```bash
+docker exec -it myhd /bin/sh -c "cd /usr/src/app; npm run deploy:local"
+```
+
+## Test
+
+```bash
+docker exec -it myhd /bin/sh -c "cd /usr/src/app; npm run test"
+```
+
+## Test with coverage
+
+```bash
+docker exec -it myhd /bin/sh -c "cd /usr/src/app; npm run coverage"
+```
+
+## Deploy to ropsten
+
+```bash
+npm run deploy:ropsten
+```
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
