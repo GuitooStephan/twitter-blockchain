@@ -1,10 +1,8 @@
-FROM node:16-alpine
+FROM node:16.13.1
 
 COPY . /usr/src/app
 
 WORKDIR /usr/src/app
-
-RUN apk add git;
 
 RUN npm install --non-interactive --frozen-lockfile
 
