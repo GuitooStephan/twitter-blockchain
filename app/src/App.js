@@ -1,40 +1,8 @@
-// import React, { useState, useEffect } from "react";
-// import "./App.css";
-// import Feed from "./Feed";
-// import TwitterIcon from "@material-ui/icons/Twitter";
-// import Web3 from "web3";
-
-// function App() {
-//   const [account, setAccount] = useState(); // state variable to set account.
-
-//   useEffect(() => {
-//     async function load() {
-//       const web3 = new Web3(Web3.givenProvider || "http://localhost:7545");
-//       const accounts = await web3.eth.requestAccounts();
-
-//       setAccount(accounts[0]);
-//     }
-
-//     load();
-//   }, []);
-
-//   return (
-//     <div className="app">
-//       <TwitterIcon className="sidebar__twitterIcon" />
-//       <Feed />
-//     </div>
-//   );
-// }
-
-// export default App;
-
 import React from "react";
-// import Sidebar from "./Sidebar";
+import Sidebar from "./Sidebar";
 import Feed from "./Feed";
-// import Widgets from "./Widgets";
 import "./App.css";
 import { useState, useEffect } from "react";
-import TwitterIcon from "@material-ui/icons/Twitter";
 
 function App() {
   const [currentAccount, setCurrentAccount] = useState("");
@@ -52,10 +20,10 @@ function App() {
       let chainId = await ethereum.request({ method: "eth_chainId" });
       console.log("Connected to chain:" + chainId);
 
-      const ropstenChainId = "0x3";
+      const rinkebyChainId = "0x3";
 
-      if (chainId !== ropstenChainId) {
-        alert("You are not connected to the ropsten Testnet!");
+      if (chainId !== rinkebyChainId) {
+        alert("You are not connected to the Rinkeby Testnet!");
         return;
       }
 
@@ -76,21 +44,23 @@ function App() {
     let chainId = await ethereum.request({ method: "eth_chainId" });
     console.log("Connected to chain:" + chainId);
 
-    const ropstenChainId = "0x3";
+    const rinkebyChainId = "0x3";
 
-    if (chainId !== ropstenChainId) {
+    if (chainId !== rinkebyChainId) {
       setCorrectNetwork(false);
     } else {
       setCorrectNetwork(true);
     }
   };
 
+  // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
     connectWallet();
     checkCorrectNetwork();
   });
 
   return (
+    // BEM
     <div>
       {currentAccount === "" ? (
         <button
@@ -101,13 +71,13 @@ function App() {
         </button>
       ) : correctNetwork ? (
         <div className="app">
-          <TwitterIcon className="sidebar__twitterIcon" />
+          <Sidebar />
           <Feed />
         </div>
       ) : (
         <div className="flex flex-col justify-center items-center mb-20 font-bold text-2xl gap-y-3">
           <div>----------------------------------------</div>
-          <div>Please connect to the ropsten Testnet</div>
+          <div>Please connect to the Rinkeby Testnet</div>
           <div>and reload the page</div>
           <div>----------------------------------------</div>
         </div>
