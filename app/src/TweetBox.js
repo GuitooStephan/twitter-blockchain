@@ -3,16 +3,16 @@ import "./TweetBox.css";
 import { Button } from "@material-ui/core";
 import { TwitterContractAddress } from "./utils/config.js";
 import { ethers } from "ethers";
-import Twitter from "./utils/TweetFactory.json";
+import TweetFactory from "./utils/TweetFactory.json";
 
 function TweetBox() {
   const [tweetMessage, setTweetMessage] = useState("");
-  // const [tweetImage, setTweetImage] = useState("");
-  // const [avatarOptions, setAvatarOptions] = useState("");
 
   const createTweet = async () => {
     let tweet = {
+      tweetId: Math.floor(Math.random() * 1000000),
       tweetText: tweetMessage,
+      date: new Date(),
     };
 
     try {
@@ -23,7 +23,7 @@ function TweetBox() {
         const signer = provider.getSigner();
         const TwitterContract = new ethers.Contract(
           TwitterContractAddress,
-          Twitter.abi,
+          TweetFactory.abi,
           signer
         );
 
