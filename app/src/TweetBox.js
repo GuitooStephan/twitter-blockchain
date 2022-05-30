@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./TweetBox.css";
 import { Button } from "@material-ui/core";
 import { TwitterContractAddress } from "./utils/config.js";
@@ -12,7 +12,6 @@ function TweetBox() {
     let tweet = {
       tweetId: Math.floor(Math.random() * 1000000),
       tweetText: tweetMessage,
-      date: new Date(),
     };
 
     try {

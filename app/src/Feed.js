@@ -11,53 +11,35 @@ function Feed({ personal }) {
   // const [edit, setEdit] = useState(false);
   const [posts, setPosts] = useState([]);
 
-  // const handleEdit = () => {
-  //   if (!edit) {
-  //     setEdit(true);
-  //   } else {
-  //     setEdit(false);
-  //   }
-  // };
-
   const getUpdatedTweets = (allTweets, address) => {
     let updatedTweets = [];
     for (let i = allTweets.length - 1; i >= 0; i--) {
-      // don't show empty tweets and from 0x0000000000000000000000000000000000000000 account
+      const pdate = new Date(allTweets[i].publishedTime * 1000);
+      let tweet = {
+        id: allTweets[i].tweetId,
+        tweetText: allTweets[i].tweet,
+        isDeleted: allTweets[i].isDeleted,
+        username: allTweets[i].owner,
+        pdate: `${pdate.toLocaleDateString(
+          "en-US"
+        )} ${pdate.toLocaleTimeString()}`,
+        deleted: false,
+        personal: false,
+      };
+
+      // don't show empty/deleted tweets
       if (
         allTweets[i].tweet === "" ||
         allTweets[i].owner === "0x0000000000000000000000000000000000000000"
       ) {
-        let tweet = {
-          id: allTweets[i].tweetId,
-          tweetText: "deleted Tweet",
-          isDeleted: allTweets[i].isDeleted,
-          username: allTweets[i].owner,
-          notDeleted: false,
-        };
-        updatedTweets.push(tweet);
+        tweet.deleted = true;
       }
 
       if (allTweets[i].owner.toLowerCase() === address.toLowerCase()) {
-        let tweet = {
-          id: allTweets[i].tweetId,
-          tweetText: allTweets[i].tweet,
-          isDeleted: allTweets[i].isDeleted,
-          username: allTweets[i].owner,
-          personal: true,
-          notDeleted: true,
-        };
-        updatedTweets.push(tweet);
-      } else {
-        let tweet = {
-          id: allTweets[i].tweetId,
-          tweetText: allTweets[i].tweet,
-          isDeleted: allTweets[i].isDeleted,
-          username: allTweets[i].owner,
-          personal: false,
-          notDeleted: true,
-        };
-        updatedTweets.push(tweet);
+        tweet.personal = true;
       }
+
+      updatedTweets.push(tweet);
     }
     return updatedTweets;
   };
@@ -86,6 +68,25 @@ function Feed({ personal }) {
   };
 
   useEffect(() => {
+    const { ethereum } = window;
+    const provider = new ethers.providers.Web3Provider(ethereum);
+    const signer = provider.getSigner();
+    const TwitterContract = new ethers.Contract(
+      TwitterContractAddress,
+      TweetFactory.abi,
+      signer
+    );
+
+    TwitterContract.on("NewTweet", (tweetId) => {
+      console.log("NewTweet event fired");
+      getTweets();
+    });
+
+    TwitterContract.on("UpdatedTweet", (tweetId) => {
+      console.log("NewTweet event fired after update");
+      getTweets();
+    });
+
     getTweets();
   }, []);
 
@@ -139,32 +140,6 @@ function Feed({ personal }) {
     }
   };
 
-  const editTweet = (key, tweetText) => async () => {
-    console.log(key);
-
-    try {
-      const { ethereum } = window;
-
-      if (ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
-        const TwitterContract = new ethers.Contract(
-          TwitterContractAddress,
-          TweetFactory.abi,
-          signer
-        );
-
-        await TwitterContract.updateTweet(key, tweetText);
-        let allTweets = await TwitterContract.getTweets();
-        setPosts(getUpdatedTweets(allTweets, ethereum.selectedAddress));
-      } else {
-        console.log("Ethereum object doesn't exist");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <div className="feed">
       <div className="feed__header">
@@ -172,19 +147,19 @@ function Feed({ personal }) {
       </div>
       <TweetBox addTweet={addTweet} />
       <FlipMove>
-        {posts.map((post) => (
-          <Post
-            key={post.id}
-            displayName={post.username}
-            text={post.tweetText}
-            personal={post.personal}
-            notDeleted={post.notDeleted}
-            onClick={deleteTweet(post.id)}
-            // onClickEdit={editTweet(post.id)}
-            // edit={edit}
-            // onClickEditButton={handleEdit}
-          />
-        ))}
+        {posts
+          .filter((p) => !p.deleted)
+          .map((post) => (
+            <Post
+              key={post.id}
+              postId={post.id}
+              displayName={post.username}
+              text={post.tweetText}
+              pdate={post.pdate}
+              personal={post.personal}
+              onClick={deleteTweet(post.id)}
+            />
+          ))}
       </FlipMove>
     </div>
   );

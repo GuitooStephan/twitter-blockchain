@@ -17,6 +17,7 @@
     "firebase": "^7.17.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-edit-text": "^4.4.1",
     "react-flip-move": "^3.0.4",
     "react-scripts": "4.0.3",
     "react-twitter-embed": "^3.0.3",
@@ -46,5 +47,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/react-edit-text": "^4.4.0"
   }
 }

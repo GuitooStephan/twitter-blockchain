@@ -20,8 +20,7 @@ function App() {
       let chainId = await ethereum.request({ method: "eth_chainId" });
       console.log("Connected to chain:" + chainId);
 
-      // const rinkebyChainId = "0x3";
-      const rinkebyChainId = "0x539"; // for local
+      const rinkebyChainId = chainId;
 
       if (chainId !== rinkebyChainId) {
         alert("You are not connected to the Rinkeby Testnet!");
@@ -45,8 +44,8 @@ function App() {
     let chainId = await ethereum.request({ method: "eth_chainId" });
     console.log("Connected to chain:" + chainId);
 
-    // const rinkebyChainId = "0x3";
-    const rinkebyChainId = "0x539"; // for local
+    const rinkebyChainId = chainId;
+    // const rinkebyChainId = "0x539"; // for local
 
     if (chainId !== rinkebyChainId) {
       setCorrectNetwork(false);
@@ -79,7 +78,7 @@ function App() {
       ) : (
         <div className="flex flex-col justify-center items-center mb-20 font-bold text-2xl gap-y-3">
           <div>----------------------------------------</div>
-          <div>Please connect to the Rinkeby Testnet</div>
+          <div>Please connect to the Ropsten Testnet</div>
           <div>and reload the page</div>
           <div>----------------------------------------</div>
         </div>
